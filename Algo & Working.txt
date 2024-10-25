@@ -57,4 +57,4 @@ Algorithm :
 
 6. Displaying the result :
 	
-	Plot the final grid as a grayscale image to visualize the erosion decal.
+	Plot the final grid as a grayscale image and also the normalized map to visualize the erosion decal.
