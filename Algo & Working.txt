@@ -1,0 +1,60 @@
+Algorithm and Working of the Program :
+-------------------------------------------------
+
+Algorithm :
+---------------
+
+1. Setting up Parameters :
+	
+	Set up the following parameters:
+	Size: Define the dimensions (width, height) of the erosion decal image.
+	Edge Sharpness: Affects how sharp the edges of the decal will be.
+	Noise Scale: Controls the detail level in the Perlin noise.
+	Noise Strength: Determines how much the Perlin noise will influence the final decal.
+
+2. Generating Perlin Noise Grid :
+
+	Create a grid (2D array) with dimensions equal to the specified size.
+	For each position (x, y) in this grid:
+	Set the initial noise value to 0.
+	Define two lists:
+		-Scales: A list of different scale factors to capture different levels of detail. Each scale 				defines how "zoomed in" a noise layer will be.
+		-Strengths: Corresponding strength values for each scale factor to blend multiple layers of noise.
+	Loop through each combination of scale and strength values:
+		Generate a noise value for (x, y) using the Perlin noise function:
+			- Scale the x and y coordinates by dividing them by (scale * s), where s is the current 			  scale factor.
+			- Calculate the Perlin noise value at this position using the scaled coordinates.
+		Multiply the noise value by the strength and add it to the total noise value n.
+	After looping through all scales, divide n by the number of scales to get an average noise value.
+	Store the averaged noise value in the grid at position (x, y).
+
+3. Normalizing the Noise Grid :
+	
+	Once the noise values are stored in the grid:
+	Find the minimum and maximum values in the grid.
+	For each value in the grid, normalize it to fall between 0 and 1:
+	Subtract the minimum value from each noise value.
+	Divide the result by the range (maximum - minimum).
+
+4. Creating the Base Shape :
+	
+	Define a base circular shape for the decal:
+		For each position (x, y) in the grid:
+			- Calculate the distance from the center of the image to (x, y).
+			- Invert the distance to make the center higher (1) and edges lower (0).
+	Apply an edge sharpness factor to this base shape by raising each value to the power of the edge_sharpness 	parameter.
+	This produces a sharp-edged, circular shape centered on the grid.
+
+5. Generating and Blending the Perlin Noise with the Base Shape :
+
+	Generate Perlin noise for the grid with the specified noise_scale.
+	Normalize the Perlin noise values to fall between 0 and 1.
+	Set a threshold value (e.g., 0.57):
+		For each value in the noise grid:
+			If the noise value is greater than the threshold, set it to 1.
+			If it is less than the threshold, set it to 0.
+	This step converts the noise into a binary pattern, creating distinct areas of "erosion."
+
+6. Displaying the result :
+	
+	Plot the final grid as a grayscale image to visualize the erosion decal.
